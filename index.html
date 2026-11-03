@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>裕安 · 走访登记</title>
+<style>body{font-family:'Microsoft YaHei';display:flex;align-items:center;justify-content:center;flex-direction:column;height:100vh;background:#eef2f7}
+.d{color:#0a4da3;font-size:18px;font-weight:700}.s{color:#888;font-size:13px;margin-top:8px}
+.spin{width:36px;height:36px;border:4px solid #b9d4ee;border-top-color:#0a4da3;border-radius:50%;animation:r 1s linear infinite;margin-bottom:16px}
+@keyframes r{to{transform:rotate(360deg)}}</style></head><body>
+<div class="spin"></div><div class="d">正在打开走访系统…</div><div class="s">如长时间未跳转，请联系中心管理员</div>
+<script>
+(function(){
+  var qs = location.search;
+  fetch('./current.json?ts=' + Date.now()).then(function(r){return r.json();}).then(function(d){
+    location.replace(d.tunnel + '/visit.html');if(!qs){qs='?info=1';}
+  }).catch(function(){
+    setTimeout(function(){ location.reload(); }, 3000);
+  });
+})();
+</script></body></html>
