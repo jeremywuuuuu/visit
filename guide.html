@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>裕安走访系统 · 云服务器部署指南</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Microsoft YaHei',sans-serif;background:#eef2f7;color:#333;line-height:1.75;padding:14px;font-size:15px}
+.hd{background:linear-gradient(135deg,#0a4da3,#1c86e8);color:#fff;border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.hd h1{font-size:20px}
+.hd p{font-size:12.5px;opacity:.92;margin-top:6px}
+.step{background:#fff;border-radius:12px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 5px rgba(10,77,163,.08)}
+.sh{background:#0a4da3;color:#fff;padding:10px 16px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sn{background:#fff;color:#0a4da3;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.sb{padding:14px 16px}
+.sb p{margin:7px 0}
+.k{background:#eaf3fb;border-left:4px solid #0a4da3;border-radius:6px;padding:8px 12px;margin:8px 0;font-size:13.5px}
+.warn{background:#fdf3e7;border-left:4px solid #e67e22;border-radius:6px;padding:8px 12px;margin:8px 0;font-size:13.5px}
+.cmd{background:#1e2a38;color:#7fe3a1;border-radius:8px;padding:12px 14px;font-family:Consolas,monospace;font-size:12.5px;word-break:break-all;margin:10px 0;user-select:all;line-height:1.7}
+.btn{display:inline-block;background:#16a085;color:#fff;border-radius:6px;padding:2px 9px;font-size:13px;font-weight:700}
+.blue{display:inline-block;background:#0a4da3;color:#fff;border-radius:6px;padding:2px 9px;font-size:13px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+th{background:#0a4da3;color:#fff;padding:7px}
+td{padding:7px;border-bottom:1px solid #e8eef5;text-align:center}
+.num{color:#c0392b;font-weight:800}
+.ft{text-align:center;color:#8898aa;font-size:11.5px;padding:16px 0 24px}
+.tip{font-size:13px;color:#666}
+b.o{color:#e67e22}
+b.g{color:#16a085}
+</style></head><body>
+
+<div class="hd">
+<h1>裕安走访系统 · 云服务器部署指南</h1>
+<p>跟着做约10分钟 · 部署后您的电脑关机也不影响团队访问 · 团队链接一个字都不用改</p>
+</div>
+
+<div class="step">
+<div class="sh"><span class="sn">1</span>买一台云服务器（5分钟）</div>
+<div class="sb">
+<p><b>推荐两个渠道，任选其一：</b></p>
+<table>
+<tr><th>渠道</th><th>入口</th><th>大概价格</th></tr>
+<tr><td><b>天翼云</b>（电信自有，推荐）</td><td>浏览器打开 www.ctyun.cn</td><td>约100-300元/年</td></tr>
+<tr><td><b>腾讯云</b>（页面最简单）</td><td>浏览器打开 cloud.tencent.com</td><td>新用户约99-112元/年</td></tr>
+</table>
+<p><b>按下面选配置（哪个便宜选哪个）：</b></p>
+<p>① 搜索框搜 <b>“轻量应用服务器”</b> → 点“立即购买”；</p>
+<p>② 地域选 <b>广州</b>（离深圳近）；</p>
+<p>③ 镜像/系统选 <b>Ubuntu 22.04</b>（纯净系统）；</p>
+<p>④ 套餐选 <b>最低配（1核2G）</b> 即可，完全够用；</p>
+<p>⑤ 购买时长选 1 年 → <span class="btn">立即购买/提交订单</span> 付款。</p>
+<div class="warn">⚠️ 付款后进入“控制台 → 轻量应用服务器”，记下这台服务器的<b>公网IP</b>（形如 123.45.67.89），第3步要用。</div>
+</div>
+</div>
+
+<div class="step">
+<div class="sh"><span class="sn">2</span>登录服务器（2分钟）</div>
+<div class="sb">
+<p><b>不用装任何软件，网页直接操作：</b></p>
+<p>① 在云控制台的服务器列表里，找到刚买的服务器，点 <span class="blue">登录</span>（腾讯云）或 <span class="blue">远程连接</span>（天翼云）；</p>
+<p>② 首次登录会要求设置/输入 <b>root 密码</b>：按提示<b>重置密码</b>（自己设一个记得住的，如字母+数字组合）；</p>
+<p>③ 密码设置好后重新点登录，会出现一个<b>黑色窗口</b>（终端），里面显示 <code>root@...:~#</code> 字样——这就是服务器的“遥控器”，下一步就在这里操作。</p>
+<div class="k">💡 天翼云/腾讯云的网页终端如果提示选“用户名”，一律选 <b>root</b>。</div>
+</div>
+</div>
+
+<div class="step">
+<div class="sh"><span class="sn">3</span>复制粘贴一条命令（3分钟，全自动）</div>
+<div class="sb">
+<p><b>把下面这一整行</b>复制，粘贴到刚才的黑色窗口里（粘贴用右键→粘贴 或 Ctrl+Shift+V），按<b>回车</b>：</p>
+<div class="cmd">curl -sSL https://jeremywuuuuu.github.io/visit/deploy.sh | bash</div>
+<p>然后<b>什么都不用做，等 2-3 分钟</b>，屏幕上会自动跑安装进度。最后如果看到：</p>
+<div class="k">==&gt; <b>部署成功！</b><br>访问地址: http://你的服务器IP/</div>
+<p>就说明装好了。</p>
+<div class="warn">⚠️ 如果提示 <b>下载失败</b>（服务器拉不到GitHub），把截图发我，我给备用方案（换下载源）。</div>
+</div>
+</div>
+
+<div class="step">
+<div class="sh"><span class="sn">4</span>把IP发给我，我完成最后切换（1分钟）</div>
+<div class="sb">
+<p>把<b>服务器公网IP</b>发给我（例如：<i>“IP是 123.45.67.89，已经部署成功”</i>）。</p>
+<p>我会把 GitHub 永久链接的跳转目标从您电脑切到云服务器——<b>团队手里的链接一个字都不用改</b>，从此：</p>
+<p>✅ 您的电脑关机、断网、重启 —— 团队随时能打开；<br>
+✅ 走访回填数据存在云上，我帮您设每日自动备份；<br>
+✅ 服务器到期前我会提前提醒您续费。</p>
+</div>
+</div>
+
+<div class="step">
+<div class="sh"><span class="sn">5</span>验证（30秒）</div>
+<div class="sb">
+<p>浏览器打开：<b>http://您的服务器IP/visit.html</b>，能看到“裕安·走访登记”页面即成功。</p>
+<p>再打开您的总览：<b>http://您的服务器IP/visit.html?k=admf01jp58156</b>，能看到84家客户和甘特图即全部就绪。</p>
+</div>
+</div>
+
+<div class="step">
+<div class="sh"><span class="sn">?</span>常见问题</div>
+<div class="sb">
+<p><b>Q1：一定要买吗？有没有免费方案？</b><br>免费方案（如国外平台）国内访问不稳定、且数据出境有风险，不建议。云服务器百元/年是最稳的选择。</p>
+<p><b>Q2：买了之后我电脑上这套还要吗？</b><br>可以留着做备份/演示用，但正式使用以云上为准。</p>
+<p><b>Q3：服务器会被攻击吗？</b><br>系统只有80端口、数据是内部走访结果，风险很低；建议设置强密码（16位以上）。</p>
+<p><b>Q4：我不小心搞坏了怎么办？</b><br>云控制台有“重装系统”按钮，重装后把第3步的命令再执行一遍即可恢复，数据文件我会帮您先备份到电脑。</p>
+<p><b>Q5：团队之前收到的链接要换吗？</b><br><b>不用换</b>。GitHub永久链接不变，我只改它背后的跳转目标。</p>
+</div>
+</div>
+
+<div class="ft">裕安政商 · 云部署指南 v1 · 遇到任何卡点直接截图发给AI助手</div>
+</body></html>
